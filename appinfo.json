@@ -5,7 +5,7 @@
   "capabilities": [ "configurable" ],
   "companyName": "MagmaStone",
   "versionCode": 1,
-  "versionLabel": "1.0.0",
+  "versionLabel": "1.1.3",
   "watchapp": {
     "watchface": false
   },
@@ -17,6 +17,13 @@
     "card":4
   },
   "resources": {
-    "media": []
+    "media": [
+      {
+        "menuIcon": true,
+        "type": "png",
+        "name": "IMAGE_MENU_ICON",
+        "file": "menu.png"
+      }
+    ]
   }
 }
