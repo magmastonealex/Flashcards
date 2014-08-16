@@ -1,0 +1,145 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+<script>
+
+function fillCards(id){
+	$("#questions").html("");
+	$("#pName").val(window.datarray[id]["name"]);
+	for (var i = 0; i < window.datarray[id]["q"].length; i++) {
+		question=$("#questions").append($("#htmldata").html()).children().last();
+		question.find(".qu").last().val(window.datarray[id]["q"][i]["q"]);
+		question.find(".an").last().val(window.datarray[id]["q"][i]["a"]);
+		$("#questions").trigger("create");
+	};
+}
+$(document).ready(function(){
+	if(localStorage.getItem("data")){
+		window.datarray=JSON.parse(localStorage.getItem("data"));
+	}else{
+		window.datarray=[];
+	}
+	for (var i = 0; i < window.datarray.length; i++) {
+		$("#packs").append($("#htmlpackdata").html()).children().last().attr("pkid",i).children().last().html(window.datarray[i]["name"]);
+	};
+	$("#packs").listview();
+	$("#packs").listview("refresh");
+	$(".packr").off("click");
+		$(".packr").on("click",function(){
+			window.pkid=$(this).parent().attr("pkid");
+			fillCards(window.pkid);
+			$.mobile.changePage("#cards");
+	});
+	$("#saveButton").click(function(){
+		localStorage.setItem("data",JSON.stringify(window.datarray));
+		window.location.href="pebblejs://close#"+encodeURIComponent(JSON.stringify(window.datarray));
+	});
+
+	$("#savePack").click(function(){
+		ourarray=[]
+		$("#questions").children().each(function(){
+			ourarray.push({"q":$(this).find(".qu").val(),"a":$(this).find(".an").val()});
+			
+		});
+		if(window.datarray[parseInt(window.pkid)]){
+			window.datarray[parseInt(window.pkid)]={"name":$("#pName").val(),"q":ourarray};
+		}else{
+			window.datarray.push({"name":$("#pName").val(),"q":ourarray});
+		}
+		localStorage.setItem("data",JSON.stringify(window.datarray));
+		$("#packs").children("[pkid="+window.pkid+"]").children("a").html($("#pName").val());
+		$.mobile.changePage("#packs");
+		//window.location.href="pebblejs://close#"+encodeURIComponent(JSON.stringify([window.datarray]));
+	});
+
+	$("#addButton").click(function(){
+		$("#questions").append($("#htmldata").html());
+		$("#questions").trigger("create");
+		$("#removeButton").prop("disabled",false);
+	});
+	$("#removeButton").click(function(){
+		$("#questions").children().last().remove();
+	});
+	$("#removeButton").prop("disabled",true);
+
+	$("#addPack").click(function(){
+		
+		$("#packs").append($("#htmlpackdata").html()).children().last().attr("pkid",window.datarray.length);
+		window.datarray.push({"name":"Untitled","q":[]});
+		$("#packs").trigger("create");
+		$("#packs").listview();
+		$("#packs").listview("refresh");
+		$("#removePack").prop("disabled",false);
+		$(".packr").off("click");
+		$(".packr").on("click",function(){
+			window.pkid=$(this).parent().attr("pkid");
+			fillCards(window.pkid);
+			$.mobile.changePage("#cards");
+		});
+	});
+	$("#removePack").click(function(){
+		window.datarray.pop();
+		$("#packs").children().last().remove();
+	});
+
+});
+</script>
+
+</head>
+<body>
+
+<div data-role="page" id="packs" >
+<div data-role="header" data-position="fixed">
+<h1>List</h1>
+<a href="#" id="saveButton" data-icon="check">Save</a>
+</div>
+<div data-role="content" >
+<ul data-role="listview" id="packs">
+
+</ul>
+<a href="#" id="addPack" data-icon="plus" data-role="button">Add pack</a>
+<a href="#" id="removePack" data-icon="minus" data-role="button">Remove pack</a>
+</div>
+</div>
+
+<div data-role="page" id="cards" >
+<div data-role="header" data-position="fixed">
+<h1>Flashcards</h1>
+<a href="#" id="savePack" data-icon="check">Save</a>
+</div>
+<div data-role="content" >
+<input placeholder="Pack Name" id="pName"></input>
+<div id="questions">
+
+</div>
+
+<a href="#" id="addButton" data-icon="plus" data-role="button">Add question</a>
+<a href="#" id="removeButton" data-icon="minus" data-role="button">Remove question</a>
+</div>
+</div>
+
+<script type="text/html" id="htmldata">
+
+<div class="question" style="padding:20px;">
+<span style="background-color:white; ">
+<input style="width:100%;height:100%;display:inline;" class="qu" placeholder="Question"></input>
+</span>
+<span style="background-color:black;">
+<input style="width:100%;height:100%;display:inline;" class="an" placeholder="Answer"></input>
+</span>
+</div>
+
+</script>
+
+
+<script type="text/html" id="htmlpackdata">
+
+<li><a href="#" class="packr">Untitled</a></li>
+
+</script>
+
+</body>
+</html>

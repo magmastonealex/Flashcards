@@ -1,0 +1,22 @@
+{
+  "uuid": "d850262f-a826-4d2a-8d35-d165028f7b25",
+  "shortName": "Flashcards",
+  "longName": "Flashcards",
+  "capabilities": [ "configurable" ],
+  "companyName": "MagmaStone",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "type": 0,
+    "mindex": 1,
+    "mtype": 2,
+    "data":3,
+    "card":4
+  },
+  "resources": {
+    "media": []
+  }
+}
